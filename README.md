@@ -1,66 +1,20 @@
-## Foundry
+# BrokenToken
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A simple token contract that allows users to create ERC721 tokens that might fail on transfer.
 
-Foundry consists of:
+## mint()
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+Mint a normal token
 
-## Documentation
+## mintSoulbound()
 
-https://book.getfoundry.sh/
+Mint a soulbound token that reverts with `error Soulbound()` on transfer
 
-## Usage
+## mintCustomRevertString(string calldata)
 
-### Build
+Mint a token that reverts with a custom string on transfer
 
-```shell
-$ forge build
-```
+# Deploying
 
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+Deploy to a network with `forge script DeployBrokenToken --account <deployer account> --rpc-url <rpc url>` or `forge scrpit DeployBrokenToken --private-key <deployer private key> --rpc-url <rpc url>`
+You will need to set the `DEPLOYER` environment variable to the address of the deployer account, either via a `.env` file or directly in the shell.

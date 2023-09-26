@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 import {ERC721} from "solady/tokens/ERC721.sol";
-import {LibString} from "solady/strings/LibString.sol";
+import {LibString} from "solady/utils/LibString.sol";
 
 contract BrokenToken is ERC721 {
     uint256 nextTokenId = 1;
@@ -30,24 +30,26 @@ contract BrokenToken is ERC721 {
     }
 
     function mint() public {
-        uint256 tokenId = nextTokenId++;
-        _mint(msg.sender, tokenId);
+        _mint();
     }
 
     function mintSoulbound() public {
-        uint256 tokenId = nextTokenId++;
-        _mint(msg.sender, tokenId);
+        uint256 tokenId = _mint();
         _setExtraData(tokenId, uint96(uint8(Status.SOULBOUND)));
     }
 
     function mintCustomRevertString(string calldata customRevertString) public {
-        uint256 tokenId = nextTokenId++;
-        _mint(msg.sender, tokenId);
+        uint256 tokenId = _mint();
         customRevertStrings[tokenId] = customRevertString;
         _setExtraData(tokenId, uint96(uint8(Status.CUSTOM_STRING)));
     }
 
-    function _beforeTokenTransfer(address, address, uint256 id) internal pure override {
+    function _mint() internal returns (uint256 tokenId) {
+        tokenId = nextTokenId++;
+        _mint(msg.sender, tokenId);
+    }
+
+    function _beforeTokenTransfer(address, address, uint256 id) internal view override {
         Status status = Status(uint8(_getExtraData(id)));
         if (status == Status.SOULBOUND) {
             revert Soulbound();
