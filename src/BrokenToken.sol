@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import {ERC721} from "solady/tokens/ERC721.sol";
 import {LibString} from "solady/utils/LibString.sol";
+import {ERC721ConduitPreapproved_Solady} from "shipyard-core/tokens/erc721/ERC721ConduitPreapproved_Solady.sol";
 
-contract BrokenToken is ERC721 {
+contract BrokenToken is ERC721ConduitPreapproved_Solady {
     uint256 nextTokenId = 1;
 
     error Soulbound();

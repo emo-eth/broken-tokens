@@ -7,6 +7,8 @@ import {BrokenToken} from "../src/BrokenToken.sol";
 contract BrokenTokenTest is Test {
     BrokenToken token;
 
+    address CONDUIT = 0x1E0049783F008A0085193E00003D00cd54003c71;
+
     function setUp() public {
         token = new BrokenToken();
     }
@@ -60,5 +62,14 @@ contract BrokenTokenTest is Test {
         assertEq(token.ownerOf(1), address(0xdead));
         assertEq(token.ownerOf(2), address(0xdead));
         assertEq(token.ownerOf(3), address(0xdead));
+    }
+
+    function testConduitPreapproval() public {
+        token.mint(address(this));
+        vm.prank(CONDUIT);
+        token.transferFrom(address(this), address(0xdead), 1);
+        assertEq(token.balanceOf(address(this)), 0);
+        assertEq(token.balanceOf(address(0xdead)), 1);
+        assertEq(token.ownerOf(1), address(0xdead));
     }
 }

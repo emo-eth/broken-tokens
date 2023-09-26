@@ -2,5 +2,8 @@
 src = "src"
 out = "out"
 libs = ["lib"]
-remappings = ['solady/=lib/solady/src/']
+remappings = [
+    'solady/=lib/solady/src/',
+    'shipyard-core/=lib/shipyard-core/src/',
+]
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
