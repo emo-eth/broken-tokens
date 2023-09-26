@@ -29,24 +29,24 @@ contract BrokenToken is ERC721 {
         return string.concat("https://example.com/", LibString.toString(id));
     }
 
-    function mint() public {
-        _mint();
+    function mint(address recipient) public {
+        _mint(recipient);
     }
 
-    function mintSoulbound() public {
-        uint256 tokenId = _mint();
+    function mintSoulbound(address recipient) public {
+        uint256 tokenId = _mint(recipient);
         _setExtraData(tokenId, uint96(uint8(Status.SOULBOUND)));
     }
 
-    function mintCustomRevertString(string calldata customRevertString) public {
-        uint256 tokenId = _mint();
+    function mintCustomRevertString(address recipient, string calldata customRevertString) public {
+        uint256 tokenId = _mint(recipient);
         customRevertStrings[tokenId] = customRevertString;
         _setExtraData(tokenId, uint96(uint8(Status.CUSTOM_STRING)));
     }
 
-    function _mint() internal returns (uint256 tokenId) {
+    function _mint(address recipient) internal returns (uint256 tokenId) {
         tokenId = nextTokenId++;
-        _mint(msg.sender, tokenId);
+        _mint(recipient, tokenId);
     }
 
     function _beforeTokenTransfer(address, address, uint256 id) internal view override {

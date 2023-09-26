@@ -12,7 +12,7 @@ contract BrokenTokenTest is Test {
     }
 
     function test_mint() public {
-        token.mint();
+        token.mint(address(this));
         assertEq(token.balanceOf(address(this)), 1);
         assertEq(token.ownerOf(1), address(this));
         token.transferFrom(address(this), address(0xdead), 1);
@@ -22,9 +22,9 @@ contract BrokenTokenTest is Test {
     }
 
     function test_sequentialIds() public {
-        token.mint();
-        token.mintSoulbound();
-        token.mintCustomRevertString("custom revert string");
+        token.mint(address(this));
+        token.mintSoulbound(address(this));
+        token.mintCustomRevertString(address(this), "custom revert string");
         assertEq(token.balanceOf(address(this)), 3);
         assertEq(token.ownerOf(1), address(this));
         assertEq(token.ownerOf(2), address(this));
@@ -37,7 +37,7 @@ contract BrokenTokenTest is Test {
     }
 
     function test_mintSoulbound() public {
-        token.mintSoulbound();
+        token.mintSoulbound(address(this));
         assertEq(token.balanceOf(address(this)), 1);
         assertEq(token.ownerOf(1), address(this));
         vm.expectRevert(BrokenToken.Soulbound.selector);
@@ -45,10 +45,20 @@ contract BrokenTokenTest is Test {
     }
 
     function test_mintCustomError(string memory revertString) public {
-        token.mintCustomRevertString(revertString);
+        token.mintCustomRevertString(address(this), revertString);
         assertEq(token.balanceOf(address(this)), 1);
         assertEq(token.ownerOf(1), address(this));
         vm.expectRevert(bytes(revertString));
         token.transferFrom(address(this), address(0xdead), 1);
+    }
+
+    function test_mintRecipient() public {
+        token.mint(address(0xdead));
+        token.mintSoulbound(address(0xdead));
+        token.mintCustomRevertString(address(0xdead), "custom revert string");
+        assertEq(token.balanceOf(address(0xdead)), 3);
+        assertEq(token.ownerOf(1), address(0xdead));
+        assertEq(token.ownerOf(2), address(0xdead));
+        assertEq(token.ownerOf(3), address(0xdead));
     }
 }
